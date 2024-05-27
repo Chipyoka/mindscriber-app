@@ -1,3 +1,5 @@
+
+
 // Send a message to the main process
 window.electron.ipcRenderer.send("message-from-renderer", "Hello i am mwape");
 

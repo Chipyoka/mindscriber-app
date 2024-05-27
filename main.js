@@ -88,6 +88,14 @@ function createWindow() {
 	});
 
 	mainWindow.loadFile("src/index.html");
+	// mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+
+	//     const isDev = import("electron-is-dev");
+	// 	mainWindow.loadURL(
+	// 		isDev.default
+	// 			? "http://localhost:1234"
+	// 			: `file://${path.join(__dirname, "src/index.html")}`
+	// 	);
 }
 
 app.whenReady().then(createWindow);
