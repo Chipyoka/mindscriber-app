@@ -111,3 +111,20 @@ ipcMain.handle("delete-note", async (event, noteId) => {
 		});
 	});
 });
+
+// Handler for updating the note
+ipcMain.handle("update-note", async (event, note) => {
+    return new Promise((resolve, reject) => {
+        const { note_id, note_category, note_title, note_content } = note;
+        const sql = "UPDATE note SET NOTE_CATEGORY = ?, NOTE_TITLE = ?, NOTE_CONTENT = ? WHERE NOTE_ID = ?";
+        const params = [note_category, note_title, note_content, note_id];
+
+        db.run(sql, params, function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+});

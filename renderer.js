@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		container.innerHTML = "";
 
 		console.log("Trying: " + rows.length);
+
 		/*Below  i have implemented a logic to check if there a re no notes to display the 
 		a message saying list empty should appear. This is done through checking the lenght of 
 		the rows array. Because if it zero means there are no notes in the database
@@ -73,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				// Create the main button element
 				const button = document.createElement("button");
 				button.type = "button";
+				button.title = " Click to View";
 				button.classList.add("btn", "entry", "row");
 
 				// Create the inner elements
@@ -119,6 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("showContent").textContent = note.NOTE_CONTENT;
 		document.getElementById("showDate").textContent = note.NOTE_DATE;
 
+		// Show the view note details and hide the edit form
+		document.getElementById("note-details").style.display = "block";
+		document.getElementById("edit-note-form").style.display = "none";
+
 		// Display the modal
 		viewModal.style.display = "block";
 	}
@@ -131,6 +137,70 @@ document.addEventListener("DOMContentLoaded", () => {
 			viewModal.style.display = "none";
 		}
 	};
+
+	/*
+	Below i have implemented the edit logic that allows user to edit and update current note
+	. First you open the view note modal, then you see edit button which opens a modal similar to 
+	add note modal. The the fields are populated with already exists content so yo can edit through
+	Validations is undertaken and then you can save.
+	*/
+
+	// Edit note button handler
+	const editNoteButton = document.getElementById("edit-note-button");
+	editNoteButton.addEventListener("click", () => {
+		// Hide the view note details and show the edit form
+		document.getElementById("note-details").style.display = "none";
+		document.getElementById("edit-note-form").style.display = "block";
+
+		// Populate the edit form with current note details
+		document.getElementById("edit-note-category").value = document.getElementById("showCategory").textContent;
+		document.getElementById("edit-note-title").value = document.getElementById("showTitle").textContent;
+		document.getElementById("edit-note-content").value = document.getElementById("showContent").textContent;
+	});
+
+	// Save edit button handler
+	const saveEditButton = document.getElementById("save-edit-button");
+	saveEditButton.addEventListener("click", async () => {
+		const editedNoteCategory = document.getElementById("edit-note-category").value;
+		const editedNoteTitle = document.getElementById("edit-note-title").value;
+		const editedNoteContent = document.getElementById("edit-note-content").value;
+
+		// Validation logic for the fields being edited
+		const textPattern = /^[A-Za-z\s]+$/; // Pattern to allow only letters and spaces
+
+		if (!editedNoteCategory || !editedNoteTitle || !editedNoteContent) {
+			errorMessage.textContent = "All fields must be filled !";
+			return;
+		}
+
+		if (!textPattern.test(editedNoteTitle)) {
+			errorMessage.textContent = "Title should only contain letters and spaces.";
+			return;
+		}
+
+		if (!textPattern.test(editedNoteCategory)) {
+			errorMessage.textContent = "Category should only contain letters and spaces.";
+			return;
+		}
+
+		// Updating the note in the database
+		try {
+			const result = await window.electron.ipcRenderer.invoke("update-note", {
+				note_id: currentNoteId,
+				note_category: editedNoteCategory,
+				note_title: editedNoteTitle,
+				note_content: editedNoteContent,
+			});
+			console.log("Note updated with ID:", currentNoteId);
+
+			// After updating the note, close the modal
+			viewModal.style.display = "none";
+			fetchRows();
+			countNotes();
+		} catch (error) {
+			console.error("Error updating note:", error);
+		}
+	});
 
 	/*
 	 Below i have implemented the delete note handler from the main process. On top, 
@@ -219,20 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// function to format date
 	function formatDate(date) {
 		// Array of months in short
-		const months = [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec",
-		];
+		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 		// get date
 		const dayOfMonth = String(date.getDate()).padStart(2, "0");
@@ -371,3 +428,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	// change phrase at interval
 	setInterval(setTopText, 10000);
 });
+
+/*
+
+::Developed from scratch with the soul purpose of;
+1. Learning Desktop App Development with Electron JS
+2. Sharpen my JavaScript Coding Skills
+3. Writing a Efficient and Clean Code.
+
+Deloveped BY THE BLACKGEEK :)
+
+*/

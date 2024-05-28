@@ -38,9 +38,7 @@
 					<h1>
 						<span id="theme" class="fade-in"></span>
 					</h1>
-					<p class="hero-text">
-						Keep track of your thoughts, start by adding a new note...
-					</p>
+					<p class="hero-text">Keep track of your thoughts, start by adding a new note...</p>
 				</section>
 			</div>
 
@@ -69,13 +67,7 @@
 				<section class="row display">
 					<!-- sidepane -->
 					<aside class=" col-3 side-pane">
-						<button
-							id="open-modal-button"
-							class=" btn btn-success"
-							data-bs-toggle="modal"
-						>
-							Add Note
-						</button>
+						<button id="open-modal-button" title="Add Note" class=" btn btn-success" data-bs-toggle="modal">Add Note</button>
 					</aside>
 					<!-- Notes Display Below -->
 					<aside id="entryDisplay" class=" col-8 entry-display scrollable-content">
@@ -129,14 +121,7 @@
 						<br />
 						<div id="showError" class="error"></div>
 						<div class="modal-footer">
-							<button
-								type="button"
-								id="closeModal"
-								class="btn btn-outline-danger"
-								data-bs-dismiss="modal"
-							>
-								Close
-							</button>
+							<button type="button" id="closeModal" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-success">Save</button>
 						</div>
 					</form>
@@ -146,23 +131,76 @@
 			<!-- The View Note Modal -->
 			<div id="viewModal" class="modal">
 				<div class="modal-content">
-					<div class="View-note-sec">
-						<h5 id="showTitle" class="modal-title capitalize">NOTE_TITLE</h5>
-						<h5 id="showCategory" class="view-cat capitalize">NOTE_CATEGORY</h5>
+					<div id="note-details">
 						<div class="View-note-sec">
-							<span id="showDate" class="view-date">NOTE_DATE</span>
+							<h5 id="showTitle" class="modal-title capitalize"></h5>
+							<h5 id="showCategory" class="view-cat capitalize"></h5>
+							<div class="View-note-sec">
+								<span id="showDate" class="view-date"></span>
+							</div>
+						</div>
+						<hr class="two" />
+						<div class="View-note-sec">
+							<p id="showContent" class="view-date"></p>
+						</div>
+						<div class="modal-footer">
+							<button id="deleteModal" title="Delete" type="button" class="btn btn-outline-danger">Delete</button>
+							<button id="edit-note-button" title="Edit" class=" edit btn btn-secondary">
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M3 17.25V21H6.75L17.81 9.93999L14.06 6.18999L3 17.25ZM20.71 7.04001C21.1 6.65001 21.1 6.02001 20.71 5.63001L18.37 3.29001C17.98 2.90001 17.35 2.90001 16.96 3.29001L15.13 5.12001L18.88 8.87001L20.71 7.04001Z"
+										fill="white"
+									/>
+								</svg>
+							</button>
+
+							<button id="closeView" type="button" class="btn btn-success">Done</button>
 						</div>
 					</div>
-					<hr class="two" />
-					<div class="View-note-sec">
-						<p id="showContent" class="view-date">NOTE_CONTENT</p>
-					</div>
-					<div class="modal-footer">
-						<button id="deleteModal" type="button" class="btn btn-outline-danger">
-							Delete
-						</button>
-						<button id="closeView" type="button" class="btn btn-success">Done</button>
-					</div>
+					<!--  -->
+					<!--  -->
+
+					<form id="edit-note-form" style="display: none;">
+						<h5 class="modal-title">Edit Note</h5>
+						<div class="form-group margin-top">
+							<input
+								type="text"
+								class="form-control"
+								maxvalue="36"
+								placeholder="Enter New Title"
+								maxlength="30"
+								id="edit-note-title"
+								name="edit-note-title"
+							/>
+						</div>
+
+						<div class="form-group my-3">
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Category: eg. Academic, Social..."
+								maxlength="15"
+								id="edit-note-category"
+								name="edit-note-category"
+							/>
+						</div>
+
+						<div class="form-group">
+							<textarea
+								id="edit-note-content"
+								class="form-control"
+								rows="5"
+								placeholder="Enter Content (Max 250 Words)"
+								maxlength="300"
+								name="edit-note-content"
+							></textarea>
+						</div>
+						<br />
+						<div id="showError" class="error"></div>
+						<div class="modal-footer">
+							<button id="save-edit-button" class="btn btn-success">Save</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
