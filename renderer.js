@@ -1,14 +1,14 @@
 // Send a message to the main process
-window.electron.ipcRenderer.send("message-from-renderer", "Hello i am mwape");
+// window.electron.ipcRenderer.send("message-from-renderer", "Hello from THE BLACKGEEK");
 
-// Listen for a reply from the main process
-window.electron.ipcRenderer.on("reply-from-main", (message) => {
-	console.log(message); // Should print "Hello from the main process"
-	const button = document.getElementById("send-message");
-	button.addEventListener("click", () => {
-		electron.ipcRenderer.send("message-from-renderer", "Message after button click");
-	});
-});
+// // Listen for a reply from the main process
+// window.electron.ipcRenderer.on("reply-from-main", (message) => {
+// 	console.log(message); // Should print "Hello from the main process"
+// 	const button = document.getElementById("send-message");
+// 	button.addEventListener("click", () => {
+// 		electron.ipcRenderer.send("message-from-renderer", "Message after button click");
+// 	});
+// });
 
 document.addEventListener("DOMContentLoaded", () => {
 	let currentNoteId = null; // Variable to store the current note ID
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	async function fetchRows() {
 		try {
 			const rows = await window.electron.ipcRenderer.invoke("fetch-rows");
-			console.log(rows);
+			// console.log(rows);
 
 			// Pass the rows to the displaying functions
 			createButtons(rows);
@@ -37,8 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Clear existing elements
 		container.innerHTML = "";
-
-		console.log("Trying: " + rows.length);
 
 		/*Below  i have implemented a logic to check if there a re no notes to display the 
 		a message saying list empty should appear. This is done through checking the lenght of 
@@ -79,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 				// Create the inner elements
 				const noteCategory = document.createElement("div");
-				noteCategory.classList.add("col-2", "left", "capitalize", "cat");
+				noteCategory.classList.add("col-3", "left", "capitalize", "cat");
 				noteCategory.textContent = row.NOTE_CATEGORY;
 
 				const noteTitle = document.createElement("div");

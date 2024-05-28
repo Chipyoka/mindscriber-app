@@ -16,6 +16,9 @@ function createWindow() {
 	});
 	// main window entry files
 	mainWindow.loadFile("src/index.html");
+
+	// Remove the default menu
+	mainWindow.removeMenu();
 }
 
 app.whenReady().then(createWindow);

@@ -1,25 +1,52 @@
 {
-  "name": "mindscriber",
+  "name": "Mindscriber",
   "version": "1.0.0",
   "main": "main.js",
+  "icon": "src/public/favicon2.ico",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "bgk.mindscriber",
+    "win": {
+      "target": "nsis",
+      "icon": "src/public/favicon2.ico",
+      "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true,
+        "createDesktopShortcut": true,
+        "createStartMenuShortcut": true
+      }
+    },
+    "files": [
+      "node_modules/**/*",
+      "src/public/*",
+      "src/assets/**/*",
+      "main.js",
+      "src/index.js",
+      "renderer.js",
+      "preload.js",
+      "src/index.html",
+      "src/App.css",
+      "mindscriber.sqlite",
+      ".gitignore",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "build"
+    }
   },
   "keywords": [],
-  "author": "",
+  "author": "Mwape Chipyoka",
   "license": "ISC",
-  "description": "",
+  "description": "Desktop Note taking App",
   "dependencies": {
-    "@parcel/transformer-sass": "^2.12.0",
-    "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
-    "parcel-bundler": "^1.12.5",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "electron": "^30.0.8",
-    "parcel": "^2.12.0",
-    "sass": "^1.77.2"
+    "electron-builder": "^24.13.3"
   }
 }
