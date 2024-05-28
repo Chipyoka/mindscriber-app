@@ -438,4 +438,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 Deloveped BY THE BLACKGEEK :)
 
+Happy Note Taking !
+
 */

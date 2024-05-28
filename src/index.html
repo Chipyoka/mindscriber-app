@@ -3,17 +3,25 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<script type="module" src="index.js"></script>
+		<meta name="theme-color" content="#353535" />
+		<meta name="description" content="A note taking desktop app" />
+
 		<link rel="stylesheet" href="App.css" />
+		<link rel="icon" href="public/favicon2.ico" />
+		<link rel="apple-touch-icon" href="public/logo512_2.png" />
+		<link rel="manifest" href="public/manifest.json" />
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap-grid.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap-reboot.rtl.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap-utilities.min.css" />
+
 		<script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/bootstrap.esm.min.js"></script>
 		<script src="assets/js/bootstrap.bundle.js"></script>
 		<script src="assets/js/bootstrap.bundle.min.js"></script>
+		<script type="module" src="index.js"></script>
+
 		<title>Mindscriber</title>
 	</head>
 	<body>
@@ -33,9 +41,13 @@
 
 			<!-- Topbar code -->
 			<div class="container">
+				<!-- salute -->
 				<p class="salute">Developed By The BlackGeek</p>
+
+				<!-- Top text field -->
 				<section class="hero text-center">
 					<h1>
+						<!-- Self changing phrase element -->
 						<span id="theme" class="fade-in"></span>
 					</h1>
 					<p class="hero-text">Keep track of your thoughts, start by adding a new note...</p>
@@ -46,7 +58,10 @@
 			<div class="container summary">
 				<div class="row flex-start">
 					<div class="border-left col-3">
+						<!-- display current date -->
 						<p class="date" id="todayDate">May 27, 2024</p>
+
+						<!-- display current time -->
 						<div class="ya-time">
 							<p class="current-time" id="currentTime"></p>
 						</div>
@@ -77,7 +92,7 @@
 			</div>
 			<!-- 
 				Below i define the two main modals for 
-				adding a new note and for viewing the mounted note
+				adding a new note and for viewing the mounted note as well as editing
 			 -->
 
 			<!-- The Add New Note Modal -->
@@ -85,6 +100,8 @@
 				<div class="modal-content">
 					<form id="add-note-form">
 						<h5 class="modal-title">Add New Note</h5>
+
+						<!-- Input field for Note Title -->
 						<div class="form-group margin-top">
 							<input
 								type="text"
@@ -97,6 +114,7 @@
 							/>
 						</div>
 
+						<!-- input field for Note Category -->
 						<div class="form-group my-3">
 							<input
 								type="text"
@@ -108,6 +126,7 @@
 							/>
 						</div>
 
+						<!-- Input field for note content -->
 						<div class="form-group">
 							<textarea
 								id="note-content"
@@ -119,7 +138,11 @@
 							></textarea>
 						</div>
 						<br />
+
+						<!-- Show error for valiaditions -->
 						<div id="showError" class="error"></div>
+
+						<!-- footer containing buttons -->
 						<div class="modal-footer">
 							<button type="button" id="closeModal" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
 							<button type="submit" class="btn btn-success">Save</button>
@@ -133,18 +156,29 @@
 				<div class="modal-content">
 					<div id="note-details">
 						<div class="View-note-sec">
+							<!-- show Note Title -->
 							<h5 id="showTitle" class="modal-title capitalize"></h5>
+
+							<!-- show note Category -->
 							<h5 id="showCategory" class="view-cat capitalize"></h5>
+
+							<!-- Show note Date -->
 							<div class="View-note-sec">
 								<span id="showDate" class="view-date"></span>
 							</div>
 						</div>
 						<hr class="two" />
+
+						<!-- show note content -->
 						<div class="View-note-sec">
 							<p id="showContent" class="view-date"></p>
 						</div>
+						<br />
+						<!-- footer for buttons -->
 						<div class="modal-footer">
 							<button id="deleteModal" title="Delete" type="button" class="btn btn-outline-danger">Delete</button>
+
+							<!-- buttom for editing -->
 							<button id="edit-note-button" title="Edit" class=" edit btn btn-secondary">
 								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path
@@ -157,11 +191,13 @@
 							<button id="closeView" type="button" class="btn btn-success">Done</button>
 						</div>
 					</div>
-					<!--  -->
-					<!--  -->
+
+					<!--  Modal for editing and updating a note below-->
 
 					<form id="edit-note-form" style="display: none;">
 						<h5 class="modal-title">Edit Note</h5>
+
+						<!-- edit Title -->
 						<div class="form-group margin-top">
 							<input
 								type="text"
@@ -174,29 +210,35 @@
 							/>
 						</div>
 
+						<!-- edit Category -->
 						<div class="form-group my-3">
 							<input
 								type="text"
 								class="form-control"
-								placeholder="Category: eg. Academic, Social..."
+								placeholder="Enter New Category"
 								maxlength="15"
 								id="edit-note-category"
 								name="edit-note-category"
 							/>
 						</div>
 
+						<!-- edit content textarea -->
 						<div class="form-group">
 							<textarea
 								id="edit-note-content"
 								class="form-control"
 								rows="5"
-								placeholder="Enter Content (Max 250 Words)"
+								placeholder="Enter New Content (Max 250 Words)"
 								maxlength="300"
 								name="edit-note-content"
 							></textarea>
 						</div>
 						<br />
+
+						<!-- Show error for validation -->
 						<div id="showError" class="error"></div>
+
+						<!-- footer containing buttons -->
 						<div class="modal-footer">
 							<button id="save-edit-button" class="btn btn-success">Save</button>
 						</div>
@@ -216,3 +258,5 @@
 		<script src="../renderer.js"></script>
 	</body>
 </html>
+
+<!-- Happy Note Taking ! -->

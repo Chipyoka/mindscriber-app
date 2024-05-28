@@ -2,18 +2,19 @@ const {app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
+// function to create a new window
 function createWindow() {
 	const mainWindow = new BrowserWindow({
 		width: 1180,
 		height: 800,
 		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
+			preload: path.join(__dirname, "preload.js"), // path to preload.js
 			contextIsolation: true, // Important for security
-			enableRemoteModule: false, // Deprecated: do not use in new applications
+			enableRemoteModule: false,
 			nodeIntegration: false, // Disable node integration in renderer process
 		},
 	});
-
+	// main window entry files
 	mainWindow.loadFile("src/index.html");
 }
 
@@ -31,16 +32,17 @@ app.on("activate", () => {
 	}
 });
 
-// Handle IPC communication
-ipcMain.on("message-from-renderer", (event, arg) => {
-	console.log(arg); // Print message from renderer process
-	event.reply("reply-from-main", "Hello from the main process");
-});
+// Handle IPC communication - test communication
+
+// ipcMain.on("message-from-renderer", (event, arg) => {
+// 	console.log(arg); // Print message from renderer process
+// 	event.reply("reply-from-main", "Hello from the main process");
+// });
 
 //Database connection establishment
 const db = new sqlite3.Database(path.join(__dirname, "mindscriber.sqlite"));
 
-// IPC handler to fetch rows from the SQLite3 database
+// IPC handlers to fetch rows from the SQLite3 database
 ipcMain.handle("fetch-rows", async () => {
 	return new Promise((resolve, reject) => {
 		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, rows) => {
@@ -84,8 +86,7 @@ ipcMain.handle("add-note", async (event, note) => {
 	return new Promise((resolve, reject) => {
 		const {note_category, note_title, note_content, note_date} = note;
 
-		const sql =
-			"INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) VALUES (?, ?, ?, ?)";
+		const sql = "INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) VALUES (?, ?, ?, ?)";
 		const params = [note_category, note_title, note_content, note_date];
 
 		db.run(sql, params, function (err) {
@@ -114,17 +115,17 @@ ipcMain.handle("delete-note", async (event, noteId) => {
 
 // Handler for updating the note
 ipcMain.handle("update-note", async (event, note) => {
-    return new Promise((resolve, reject) => {
-        const { note_id, note_category, note_title, note_content } = note;
-        const sql = "UPDATE note SET NOTE_CATEGORY = ?, NOTE_TITLE = ?, NOTE_CONTENT = ? WHERE NOTE_ID = ?";
-        const params = [note_category, note_title, note_content, note_id];
+	return new Promise((resolve, reject) => {
+		const {note_id, note_category, note_title, note_content} = note;
+		const sql = "UPDATE note SET NOTE_CATEGORY = ?, NOTE_TITLE = ?, NOTE_CONTENT = ? WHERE NOTE_ID = ?";
+		const params = [note_category, note_title, note_content, note_id];
 
-        db.run(sql, params, function(err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
+		db.run(sql, params, function (err) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
 });
