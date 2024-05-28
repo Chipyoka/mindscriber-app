@@ -10,40 +10,9 @@ window.electron.ipcRenderer.on("reply-from-main", (message) => {
 	});
 });
 
-// document.addEventListener("DOMContentLoaded", () => {
-// 	const fetchButton = document.getElementById("fetch-button");
-
-// 	fetchButton.addEventListener("click", async () => {
-// 		try {
-// 			const rows = await window.electron.ipcRenderer.invoke("fetch-rows");
-// 			console.log(rows);
-// 		} catch (error) {
-// 			console.error("Error fetching rows:", error);
-// 		}
-// 	});
-// });
-
-//////////////////////////////////////////////////////////////////////////////
-
-// document.addEventListener("DOMContentLoaded", () => {
-// 	const fetchButton = document.getElementById("fetch-button-2");
-
-// 	fetchButton.addEventListener("click", async () => {
-// 		const id = document.getElementById("row-id").value;
-// 		try {
-// 			const row = await window.electron.ipcRenderer.invoke("fetch-row-by-id", id);
-// 			console.log(row);
-// 			console.log("success");
-// 		} catch (error) {
-// 			console.error("Error fetching row:", error);
-// 		}
-// 	});
-// });
-
-///////////////////////////////////////////////////////////////////////
-
 document.addEventListener("DOMContentLoaded", () => {
 	let currentNoteId = null; // Variable to store the current note ID
+	const errorMessage = document.getElementById("showError");
 
 	// Function to fetch rows from the database
 	async function fetchRows() {
@@ -133,6 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	};
 
+	/*
+	 Below i have implemented the delete note handler from the main process. On top, 
+	 there is a var currentNoteId set null and updated on event click to view, then stored
+	 then used to delete the note based on that id.
+	*/
+
 	// Delete note button handler
 	const deleteNoteButton = document.getElementById("deleteModal");
 	deleteNoteButton.addEventListener("click", async () => {
@@ -185,8 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Get the button that opens the modal
 	const openModalButton = document.getElementById("open-modal-button");
 
-	// Get the <span> element that closes the modal
-	const closeModalButton = document.getElementsByClassName("close")[0];
 
 	// Get the form
 	const addNoteForm = document.getElementById("add-note-form");
@@ -196,21 +169,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		modal.style.display = "block";
 	};
 
-	// When the user clicks on <span> (x), close the modal
-	closeModalButton.onclick = function () {
-		modal.style.display = "none";
-	};
-
 	const closeButton = document.getElementById("closeModal");
 	closeButton.onclick = function () {
 		modal.style.display = "none";
 		addNoteForm.reset();
+		errorMessage.textContent = " ";
 	};
 
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function (event) {
 		if (event.target == modal) {
 			modal.style.display = "none";
+			errorMessage.textContent = " ";
 		}
 	};
 
@@ -273,6 +243,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Set interval to generate live clock
 	setInterval(tick, 1000);
 
+	/*
+	Below is the handle to submit the data collected from the form.
+	*/
 	// Handle form submission
 	addNoteForm.addEventListener("submit", async (event) => {
 		event.preventDefault();
@@ -280,6 +253,24 @@ document.addEventListener("DOMContentLoaded", () => {
 		const noteCategory = document.getElementById("note-category").value;
 		const noteTitle = document.getElementById("note-title").value;
 		const noteContent = document.getElementById("note-content").value;
+
+		// Validation logic defined below
+		const textPattern = /^[A-Za-z\s]+$/; // Pattern to allow only letters and spaces
+
+		if (!noteCategory || !noteTitle || !noteContent) {
+			errorMessage.textContent = "All fields must be filled !";
+			return;
+		}
+
+		if (!textPattern.test(noteTitle)) {
+			errorMessage.textContent = "Title should only contain letters and spaces.";
+			return;
+		}
+
+		if (!textPattern.test(noteCategory)) {
+			errorMessage.textContent = "Category should only contain letters and spaces.";
+			return;
+		}
 
 		//format date to post to database
 

@@ -102,7 +102,6 @@
 								maxlength="30"
 								id="note-title"
 								name="note-title"
-								required
 							/>
 						</div>
 
@@ -112,10 +111,8 @@
 								class="form-control"
 								placeholder="Category: eg. Academic, Social..."
 								maxlength="15"
-								required
 								id="note-category"
 								name="note-category"
-								required
 							/>
 						</div>
 
@@ -127,15 +124,15 @@
 								placeholder="Enter Content (Max 250 Words)"
 								maxlength="300"
 								name="note-content"
-								required
 							></textarea>
 						</div>
-						<br /><br />
+						<br />
+						<div id="showError" class="error"></div>
 						<div class="modal-footer">
 							<button
 								type="button"
 								id="closeModal"
-								class="btn btn-outline-danger close"
+								class="btn btn-outline-danger"
 								data-bs-dismiss="modal"
 							>
 								Close
@@ -156,12 +153,14 @@
 							<span id="showDate" class="view-date">NOTE_DATE</span>
 						</div>
 					</div>
-					<hr class="two"/>
+					<hr class="two" />
 					<div class="View-note-sec">
 						<p id="showContent" class="view-date">NOTE_CONTENT</p>
 					</div>
 					<div class="modal-footer">
-						<button id="deleteModal" type="button" class="btn btn-outline-danger">Delete</button>
+						<button id="deleteModal" type="button" class="btn btn-outline-danger">
+							Delete
+						</button>
 						<button id="closeView" type="button" class="btn btn-success">Done</button>
 					</div>
 				</div>
