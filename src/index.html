@@ -5,12 +5,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script type="module" src="index.js"></script>
 		<link rel="stylesheet" href="App.css" />
-		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-		<link rel="stylesheet" href="assets/css/bootstrap-grid.min.css">
-		<link rel="stylesheet" href="assets/css/bootstrap-utilities.min.css">
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-grid.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-reboot.rtl.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap.rtl.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-utilities.min.css" />
 		<script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/bootstrap.esm.min.js"></script>
 		<script src="assets/js/bootstrap.bundle.js"></script>
+		<script src="assets/js/bootstrap.bundle.min.js"></script>
 		<title>Mindscriber</title>
 	</head>
 	<body>
@@ -45,46 +48,127 @@
 			<div class="container summary">
 				<div class="row flex-start">
 					<div class="border-left col-3">
-						<p class="date">May 27, 2024</p>
+						<p class="date" id="todayDate">May 27, 2024</p>
 						<div class="ya-time">
-							<p class="current-time">01:30 HRS</p>
+							<p class="current-time" id="currentTime"></p>
 						</div>
 					</div>
 
 					<div class="col"></div>
+
+					<!-- number of notes displayed below -->
 					<div class="col-1">
-						<p>Notes: 02</p>
+						<p id="displayCount"></p>
 					</div>
 				</div>
 			</div>
 
-			<hr />
+			<hr class="one" />
 			<!-- Main Display Code Below -->
 			<div class="container-fluid">
 				<section class="row display">
 					<!-- sidepane -->
 					<aside class=" col-3 side-pane">
-						<button class=" btn btn-success">Add Note</button>
+						<button
+							id="open-modal-button"
+							class=" btn btn-success"
+							data-bs-toggle="modal"
+						>
+							Add Note
+						</button>
 					</aside>
 					<!-- Notes Display Below -->
-					<aside class=" col-8 entry-display scrollable-content">
-						<button type="button" class="btn entry row">
-							<!-- {/* <div class="col-1">{note.NOTE_ID}</div> */} -->
-							<div class="col-2 left capitalize">CATEGORY</div>
-							<div class="col-4 left capitalize">NOTE_TITLE</div>
-							<div class="col-3 right">NOTE_DATE</div>
-						</button>
-						<button type="button" class="btn entry row">
-							<!-- {/* <div class="col-1">{note.NOTE_ID}</div> */} -->
-							<div class="col-2 left capitalize">CATEGORY</div>
-							<div class="col-4 left capitalize">NOTE_TITLE</div>
-							<div class="col-3 right">NOTE_DATE</div>
-						</button>
-						<!-- <p class="empty">List appears here...</p> -->
+					<aside id="entryDisplay" class=" col-8 entry-display scrollable-content">
+						<!-- List of Notes appears here... -->
 					</aside>
 				</section>
 			</div>
+			<!-- 
+				Below i define the two main modals for 
+				adding a new note and for viewing the mounted note
+			 -->
+
+			<!-- The Add New Note Modal -->
+			<div id="myModal" class="modal">
+				<div class="modal-content">
+					<form id="add-note-form">
+						<h5 class="modal-title">Add New Note</h5>
+						<div class="form-group margin-top">
+							<input
+								type="text"
+								class="form-control"
+								maxvalue="36"
+								placeholder="Title: @ New chicken recipe"
+								maxlength="30"
+								id="note-title"
+								name="note-title"
+								required
+							/>
+						</div>
+
+						<div class="form-group my-3">
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Category: eg. Academic, Social..."
+								maxlength="15"
+								required
+								id="note-category"
+								name="note-category"
+								required
+							/>
+						</div>
+
+						<div class="form-group">
+							<textarea
+								id="note-content"
+								class="form-control"
+								rows="5"
+								placeholder="Enter Content (Max 250 Words)"
+								maxlength="300"
+								name="note-content"
+								required
+							></textarea>
+						</div>
+						<br /><br />
+						<div class="modal-footer">
+							<button
+								type="button"
+								id="closeModal"
+								class="btn btn-outline-danger close"
+								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button type="submit" class="btn btn-success">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- The View Note Modal -->
+			<div id="viewModal" class="modal">
+				<div class="modal-content">
+					<div class="View-note-sec">
+						<h5 id="showTitle" class="modal-title capitalize">NOTE_TITLE</h5>
+						<h5 id="showCategory" class="view-cat capitalize">NOTE_CATEGORY</h5>
+						<div class="View-note-sec">
+							<span id="showDate" class="view-date">NOTE_DATE</span>
+						</div>
+					</div>
+					<hr class="two"/>
+					<div class="View-note-sec">
+						<p id="showContent" class="view-date">NOTE_CONTENT</p>
+					</div>
+					<div class="modal-footer">
+						<button id="deleteModal" type="button" class="btn btn-outline-danger">Delete</button>
+						<button id="closeView" type="button" class="btn btn-success">Done</button>
+					</div>
+				</div>
+			</div>
 		</div>
+
+		<!-- Notice for small screen -->
 		<div class="notice">
 			<i class="bi bi-emoji-tear"></i>
 			<h4>Oops !</h4>

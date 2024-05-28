@@ -1,84 +1,11 @@
-// const { app, BrowserWindow } = require('electron');
-// const ipcMain = require('electron').ipcMain;
-
-// function createWindow () {
-//   const win = new BrowserWindow({
-//     width: 800,
-//     height: 600,
-//     webPreferences: {
-//       contextIsolation: true, // Keep context isolation enabled for security
-//       nodeIntegration: false  // Disable Node.js integration
-//     }
-//   });
-
-//   win.loadFile('src/index.html');
-
-//   // Handle messages from the renderer process
-//   ipcMain.on('message-from-renderer', (event, message) => {
-//     console.log(message);
-//     // Perform actions in the main process based on the message
-//     event.sender.send('reply-from-main', `Main process received: ${message}`);
-//   });
-// }
-
-// app.whenReady().then(createWindow);
-
-// app.on('window-all-closed', () => {
-//   if (process.platform !== 'darwin') {
-//     app.quit();
-//   }
-// });
-
-// app.on('activate', () => {
-//   if (BrowserWindow.getAllWindows().length === 0) {
-//     createWindow();
-//   }
-// });
-
-// const {app, BrowserWindow, ipcMain} = require("electron");
-
-// function createWindow() {
-// 	const win = new BrowserWindow({
-// 		width: 800,
-// 		height: 600,
-// 		webPreferences: {
-// 			nodeIntegration: true,
-// 			contextIsolation: false, //Disables remote module execution
-// 		},
-// 	});
-
-// 	win.loadFile("src/index.html");
-
-// 	// Listen for messages from the renderer process
-// 	ipcMain.on("message-from-renderer", (event, arg) => {
-// 		console.log(arg); // Log the received message from renderer
-// 		// Handle the message and send a response if needed
-// 		event.sender.send("message-to-renderer", "Response from main process");
-// 	});
-// }
-
-// app.whenReady().then(createWindow);
-
-// app.on("window-all-closed", () => {
-// 	if (process.platform !== "darwin") {
-// 		app.quit();
-// 	}
-// });
-
-// app.on("activate", () => {
-// 	if (BrowserWindow.getAllWindows().length === 0) {
-// 		createWindow();
-// 	}
-// });
-
 const {app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
 function createWindow() {
 	const mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
+		width: 1180,
+		height: 800,
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 			contextIsolation: true, // Important for security
@@ -88,14 +15,6 @@ function createWindow() {
 	});
 
 	mainWindow.loadFile("src/index.html");
-	// mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
-
-	//     const isDev = import("electron-is-dev");
-	// 	mainWindow.loadURL(
-	// 		isDev.default
-	// 			? "http://localhost:1234"
-	// 			: `file://${path.join(__dirname, "src/index.html")}`
-	// 	);
 }
 
 app.whenReady().then(createWindow);
@@ -124,7 +43,7 @@ const db = new sqlite3.Database(path.join(__dirname, "mindscriber.sqlite"));
 // IPC handler to fetch rows from the SQLite3 database
 ipcMain.handle("fetch-rows", async () => {
 	return new Promise((resolve, reject) => {
-		db.all("SELECT * FROM note", [], (err, rows) => {
+		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, rows) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -134,6 +53,20 @@ ipcMain.handle("fetch-rows", async () => {
 	});
 });
 
+//Handler for counting notes available.
+ipcMain.handle("count-notes", async () => {
+	return new Promise((resolve, reject) => {
+		db.all("SELECT COUNT(*) FROM note", [], (err, rows) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(rows);
+			}
+		});
+	});
+});
+
+// Handler for fetching note by ID
 ipcMain.handle("fetch-row-by-id", async (event, id) => {
 	return new Promise((resolve, reject) => {
 		db.all("SELECT * FROM note WHERE NOTE_ID = ?", [id], (err, row) => {
@@ -141,6 +74,39 @@ ipcMain.handle("fetch-row-by-id", async (event, id) => {
 				reject(err);
 			} else {
 				resolve(row);
+			}
+		});
+	});
+});
+
+// Handler for inserting a new note
+ipcMain.handle("add-note", async (event, note) => {
+	return new Promise((resolve, reject) => {
+		const {note_category, note_title, note_content, note_date} = note;
+
+		const sql =
+			"INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) VALUES (?, ?, ?, ?)";
+		const params = [note_category, note_title, note_content, note_date];
+
+		db.run(sql, params, function (err) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve({id: this.lastID}); // Return the ID of the newly inserted note
+			}
+		});
+	});
+});
+
+// Handler for deleting a note
+ipcMain.handle("delete-note", async (event, noteId) => {
+	return new Promise((resolve, reject) => {
+		const sql = "DELETE FROM note WHERE NOTE_ID = ?";
+		db.run(sql, [noteId], function (err) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve({success: true});
 			}
 		});
 	});
