@@ -38,45 +38,75 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Clear existing elements
 		container.innerHTML = "";
 
-		rows.forEach((row) => {
-			// Create the main button element
-			const button = document.createElement("button");
-			button.type = "button";
-			// button.id = "entry";
-			button.classList.add("btn", "entry", "row");
+		console.log("Trying: " + rows.length);
+		/*Below  i have implemented a logic to check if there a re no notes to display the 
+		a message saying list empty should appear. This is done through checking the lenght of 
+		the rows array. Because if it zero means there are no notes in the database
+		*/
 
-			// Create the inner elements
-			const noteCategory = document.createElement("div");
-			noteCategory.classList.add("col-2", "left", "capitalize", "cat");
-			noteCategory.textContent = row.NOTE_CATEGORY;
+		if (rows.length < 1) {
+			// console.log("Table Empty");
 
-			const noteTitle = document.createElement("div");
-			noteTitle.classList.add("col-4", "left", "capitalize", "cat");
-			noteTitle.textContent = row.NOTE_TITLE;
+			// create element that displays the empty list element
+			const emptyMessage = document.createElement("div");
+			emptyMessage.classList.add("entry-display-no");
 
-			const noteDate = document.createElement("div");
-			noteDate.classList.add("col-3", "right", "cat");
-			noteDate.textContent = row.NOTE_DATE;
+			const empty = document.createElement("p");
+			empty.classList.add("empty");
+			empty.textContent = "List Empty";
 
-			const noteContent = document.createElement("div");
-			noteContent.classList.add("cat");
-			noteContent.textContent = row.NOTE_CONTENT;
+			const emptySub = document.createElement("p");
+			emptySub.classList.add("empty-sub");
+			emptySub.textContent = "Start by adding a new note now!";
 
-			//  event for button
-
-			button.addEventListener("click", () => {
-				currentNoteId = row.NOTE_ID; // Store the note ID
-				showViewNoteModal(row);
-			});
-
-			// Append inner elements to the button
-			button.appendChild(noteCategory);
-			button.appendChild(noteTitle);
-			button.appendChild(noteDate);
+			// Append the button to the div
+			emptyMessage.appendChild(empty);
+			emptyMessage.appendChild(emptySub);
 
 			// Append the button to the container
-			container.appendChild(button);
-		});
+			container.appendChild(emptyMessage);
+		} else {
+			// console.log("Table Has values");
+			// Create the button that displays the rows
+
+			rows.forEach((row) => {
+				// Create the main button element
+				const button = document.createElement("button");
+				button.type = "button";
+				button.classList.add("btn", "entry", "row");
+
+				// Create the inner elements
+				const noteCategory = document.createElement("div");
+				noteCategory.classList.add("col-2", "left", "capitalize", "cat");
+				noteCategory.textContent = row.NOTE_CATEGORY;
+
+				const noteTitle = document.createElement("div");
+				noteTitle.classList.add("col-4", "left", "capitalize", "cat");
+				noteTitle.textContent = row.NOTE_TITLE;
+
+				const noteDate = document.createElement("div");
+				noteDate.classList.add("col-3", "right", "cat");
+				noteDate.textContent = row.NOTE_DATE;
+
+				const noteContent = document.createElement("div");
+				noteContent.classList.add("cat");
+				noteContent.textContent = row.NOTE_CONTENT;
+
+				//  event for button
+				button.addEventListener("click", () => {
+					currentNoteId = row.NOTE_ID; // Store the note ID of clicked
+					showViewNoteModal(row);
+				});
+
+				// Append inner elements to the button
+				button.appendChild(noteCategory);
+				button.appendChild(noteTitle);
+				button.appendChild(noteDate);
+
+				// Append the button to the container
+				container.appendChild(button);
+			});
+		}
 	}
 
 	// Function to show the view note modal
@@ -152,6 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			console.error("Error fetching rows:", error);
 		}
 	}
+
+	// fetch note count initially when the page loads
 	countNotes();
 
 	// Get the modal
@@ -160,15 +192,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Get the button that opens the modal
 	const openModalButton = document.getElementById("open-modal-button");
 
-
 	// Get the form
 	const addNoteForm = document.getElementById("add-note-form");
 
-	// When the user clicks the button, open the modal
+	//  open the modal When the add note button is clicked
 	openModalButton.onclick = function () {
 		modal.style.display = "block";
 	};
 
+	// close modal when the close button is clicked
 	const closeButton = document.getElementById("closeModal");
 	closeButton.onclick = function () {
 		modal.style.display = "none";
@@ -186,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// function to format date
 	function formatDate(date) {
+		// Array of months in short
 		const months = [
 			"Jan",
 			"Feb",
@@ -201,43 +234,51 @@ document.addEventListener("DOMContentLoaded", () => {
 			"Dec",
 		];
 
+		// get date
 		const dayOfMonth = String(date.getDate()).padStart(2, "0");
 		const month = months[date.getMonth()];
 		const year = date.getFullYear();
-		// const hours = String(date.getHours()).padStart(2, "0");
-		// const minutes = String(date.getMinutes()).padStart(2, "0");
 
+		// return date
 		return `${month} ${dayOfMonth}, ${year}`;
 	}
+
 	// function to format time
 	function formatTime(date) {
+		// get time
 		const hours = String(date.getHours()).padStart(2, "0");
 		const minutes = String(date.getMinutes()).padStart(2, "0");
-		// const seconds = String(date.getSeconds()).padStart(2, "0");
 
+		// return time
 		return `${hours}:${minutes}`;
 	}
 
+	// get seconds seperately
 	function countSeconds(date) {
 		const seconds = String(date.getSeconds()).padStart(2, "0");
 		return `:${seconds}`;
 	}
 
+	// tick tok every second to update live clock and date
 	function tick() {
+		// set current time and date
 		const currentDate = new Date();
 		const formattedDate = formatDate(currentDate);
 
 		const currentTime = new Date();
 		const formattedTime = formatTime(currentTime);
 		const formattedseconds = countSeconds(currentTime);
+
 		// display time on screen
 		const displayTime = document.getElementById("currentTime");
 		displayTime.textContent = `${formattedTime}${formattedseconds} HRS`;
 
+		// display date
 		const displayDate = document.getElementById("todayDate");
 		displayDate.textContent = formattedDate;
 	}
 
+	// call tick function
 	tick();
 
 	// Set interval to generate live clock
@@ -250,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	addNoteForm.addEventListener("submit", async (event) => {
 		event.preventDefault();
 
+		// get elements fo input fields
 		const noteCategory = document.getElementById("note-category").value;
 		const noteTitle = document.getElementById("note-title").value;
 		const noteContent = document.getElementById("note-content").value;
@@ -257,11 +299,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Validation logic defined below
 		const textPattern = /^[A-Za-z\s]+$/; // Pattern to allow only letters and spaces
 
+		// check if fields are empty
 		if (!noteCategory || !noteTitle || !noteContent) {
 			errorMessage.textContent = "All fields must be filled !";
 			return;
 		}
 
+		// check for symbols in Title and Category
 		if (!textPattern.test(noteTitle)) {
 			errorMessage.textContent = "Title should only contain letters and spaces.";
 			return;
@@ -283,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const fullDate = `${formattedDate} ${formattedTime}`;
 		console.log(fullDate);
 
+		// call API to post values to Database
 		try {
 			const result = await window.electron.ipcRenderer.invoke("add-note", {
 				note_category: noteCategory,
@@ -290,17 +335,39 @@ document.addEventListener("DOMContentLoaded", () => {
 				note_content: noteContent,
 				note_date: fullDate,
 			});
+			// log ID of added note
 			console.log("Note added with ID:", result.id);
 
 			// After adding the note, close the modal and clear the form
 			modal.style.display = "none";
 			addNoteForm.reset();
 
-			// Optionally, fetch rows and count again to update the list
+			// fetch rows and count again to update the list
 			fetchRows();
 			countNotes();
 		} catch (error) {
 			console.error("Error adding note:", error);
 		}
 	});
+
+	/* Not killing the dream of allowing top text to be dynamic so added an array of 
+	my desired phrases to be interating as the app is open. */
+
+	function setTopText() {
+		// Array of phrases
+		const texts = ["Hello Scriber !", "Track your Ideas", "Capture your Thoughts"];
+
+		//get random text by random value representing index
+		const randomIndex = Math.floor(Math.random() * texts.length);
+		const newText = texts[randomIndex];
+
+		// set top text
+		const topText = document.getElementById("theme");
+		topText.textContent = newText;
+	}
+	// call function initially when the page loads
+	setTopText();
+
+	// change phrase at interval
+	setInterval(setTopText, 10000);
 });

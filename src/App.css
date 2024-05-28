@@ -277,6 +277,9 @@
   }
   
   .entry-display-no{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
     max-width: 100%;
     
     
