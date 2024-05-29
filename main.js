@@ -2,11 +2,39 @@ const {app, BrowserWindow, ipcMain} = require("electron");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
-// function to create a new window
-function createWindow() {
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+let mainWindow;
+let loaderWindow;
+// icon for the app
+const iconPath = path.join(__dirname, "src/public/favicon2.ico");
+
+function createLoaderWindow() {
+	loaderWindow = new BrowserWindow({
+		width: 1180,
+		height: 700,
+		frame: false,
+		transparent: true,
+		alwaysOnTop: true,
+		webPreferences: {
+			nodeIntegration: false,
+			enableRemoteModule: false,
+			contextIsolation: true,
+		},
+	});
+
+	loaderWindow.loadFile(path.join(__dirname, "src/loader.html"));
+	// Remove the default menu
+	loaderWindow.removeMenu();
+}
+
+function createMainWindow() {
+	// Creating the window
 	const mainWindow = new BrowserWindow({
 		width: 1180,
-		height: 800,
+		height: 700,
+		icon: iconPath,
+		backgroundColor: "#232323",
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"), // path to preload.js
 			contextIsolation: true, // Important for security
@@ -19,9 +47,45 @@ function createWindow() {
 
 	// Remove the default menu
 	mainWindow.removeMenu();
+	// Show main window after 2 seconds
+	setTimeout(() => {
+		loaderWindow.close();
+		mainWindow.show();
+	}, 5000);
 }
 
-app.whenReady().then(createWindow);
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// function to create a new window
+// function createWindow() {
+// 	// icon for the app
+// 	const iconPath = path.join(__dirname, "src/public/favicon2.ico");
+
+// 	// Creating the window
+// 	const mainWindow = new BrowserWindow({
+// 		width: 1180,
+// 		height: 800,
+// 		icon: iconPath,
+// 		backgroundColor: "#232323",
+// 		webPreferences: {
+// 			preload: path.join(__dirname, "preload.js"), // path to preload.js
+// 			contextIsolation: true, // Important for security
+// 			enableRemoteModule: false,
+// 			nodeIntegration: false, // Disable node integration in renderer process
+// 		},
+// 	});
+// 	// main window entry files
+// 	mainWindow.loadFile("src/index.html");
+
+// 	// Remove the default menu
+// 	mainWindow.removeMenu();
+// }
+
+// app.whenReady().then(createWindow);
+
+app.on("ready", () => {
+	createLoaderWindow();
+	createMainWindow();
+});
 
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") {
@@ -31,7 +95,8 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
 	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow();
+		createLoaderWindow();
+		createMainWindow();
 	}
 });
 
@@ -65,6 +130,53 @@ function openDatabase() {
 
 // initialize and check if table exists or else create one and insert a welcoming note
 
+// function initializeDatabase() {
+// 	db.serialize(() => {
+// 		db.run(
+// 			`
+//             CREATE TABLE IF NOT EXISTS note (
+//                 NOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+//                 NOTE_CATEGORY TEXT,
+//                 NOTE_TITLE TEXT,
+//                 NOTE_CONTENT TEXT,
+//                 NOTE_DATE TEXT
+//             )
+//         `,
+// 			(err) => {
+// 				if (err) {
+// 					console.error("Error creating note table:", err);
+// 				} else {
+// 					console.log("Table 'note' ensured to exist.");
+
+// 					// Insert a welcome note
+// 					const welcomeNote = {
+// 						category: "Getting Started",
+// 						title: "Welcome",
+// 						content:
+// 							"Hello Mindscriber, I'm thrilled to have you on board. This application is designed to help you manage your notes efficiently and effectively. Create new notes, and track your thoughts with ease. If you have any questions, feel free to reach out to THE BLACKGEEK. Happy note-taking!",
+// 						date: "May 29, 2024 18:00",
+// 					};
+
+// 					const sql = `
+//                         INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE)
+//                         VALUES (?, ?, ?, ?)
+//                     `;
+// 					const params = [welcomeNote.category, welcomeNote.title, welcomeNote.content, welcomeNote.date];
+
+// 					db.run(sql, params, function (err) {
+// 						if (err) {
+// 							console.error("Error inserting welcome note:", err);
+// 						} else {
+// 							console.log("Welcome note added with ID:", this.lastID);
+// 						}
+// 					});
+// 				}
+// 			}
+// 		);
+// 	});
+// }
+
+// /////////////////////////////////////////////////////////////////////////////////////////////
 function initializeDatabase() {
 	db.serialize(() => {
 		db.run(
@@ -83,26 +195,37 @@ function initializeDatabase() {
 				} else {
 					console.log("Table 'note' ensured to exist.");
 
-					// Insert a welcome note
-					const welcomeNote = {
-						category: "Getting Started",
-						title: "Welcome",
-						content:
-							"Hello Mindscriber, I'm thrilled to have you on board. This application is designed to help you manage your notes efficiently and effectively. Create new notes, and track your thoughts with ease. If you have any questions, feel free to reach out to THE BLACKGEEK. Happy note-taking!",
-						date: "May 29, 2024 18:00",
-					};
-
-					const sql = `
-                        INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) 
-                        VALUES (?, ?, ?, ?)
-                    `;
-					const params = [welcomeNote.category, welcomeNote.title, welcomeNote.content, welcomeNote.date];
-
-					db.run(sql, params, function (err) {
+					// Check if the table is empty
+					db.get("SELECT COUNT(*) AS count FROM note", (err, row) => {
 						if (err) {
-							console.error("Error inserting welcome note:", err);
+							console.error("Error checking table contents:", err);
 						} else {
-							console.log("Welcome note added with ID:", this.lastID);
+							if (row.count === 0) {
+								// Table is empty, insert welcome note
+								const welcomeNote = {
+									category: "Getting Started",
+									title: "Welcome",
+									content:
+										"Welcome to the app! We are thrilled to have you on board. This application is designed to help you manage your notes efficiently and effectively. Explore the features, create new notes, and organize your thoughts with ease. If you have any questions, feel free to reach out to our support team. Happy note-taking!",
+									date: "May 29, 2024 18:00",
+								};
+
+								const sql = `
+                                    INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) 
+                                    VALUES (?, ?, ?, ?)
+                                `;
+								const params = [welcomeNote.category, welcomeNote.title, welcomeNote.content, welcomeNote.date];
+
+								db.run(sql, params, function (err) {
+									if (err) {
+										console.error("Error inserting welcome note:", err);
+									} else {
+										console.log("Welcome note added with ID:", this.lastID);
+									}
+								});
+							} else {
+								console.log("Table 'note' is not empty, no welcome note added.");
+							}
 						}
 					});
 				}
@@ -110,6 +233,8 @@ function initializeDatabase() {
 		);
 	});
 }
+
+// /////////////////////////////////////////////////////////////////////////////////////////////
 
 // new promise to perform db operations whilst open
 

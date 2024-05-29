@@ -1,12 +1,15 @@
 const {FusesPlugin} = require("@electron-forge/plugin-fuses");
 const {FuseV1Options, FuseVersion} = require("@electron/fuses");
+const path = require("path");
 
 module.exports = {
 	packagerConfig: {
 		asar: true,
-		extraFiles: [  // Add this line
-		"./mindscriber.sqlite"  // Replace with the actual path to your database
-	  ]
+		icon: path.join(__dirname, "src", "assets", "public", "favicon2"),
+		extraFiles: [
+			// Add this line
+			"./mindscriber.sqlite", // Replace with the actual path to your database
+		],
 	},
 	rebuildConfig: {},
 	makers: [

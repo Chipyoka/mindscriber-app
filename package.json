@@ -27,6 +27,7 @@
       "renderer.js",
       "preload.js",
       "src/index.html",
+      "src/loader.html",
       "src/App.css",
       "mindscriber.sqlite",
       ".gitignore",
