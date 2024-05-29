@@ -18,7 +18,7 @@ function createWindow() {
 	mainWindow.loadFile("src/index.html");
 
 	// Remove the default menu
-	// mainWindow.removeMenu();
+	mainWindow.removeMenu();
 }
 
 app.whenReady().then(createWindow);
@@ -63,7 +63,7 @@ function openDatabase() {
 	}
 }
 
-// initialize and check if table exists or else create one
+// initialize and check if table exists or else create one and insert a welcoming note
 
 function initializeDatabase() {
 	db.serialize(() => {
@@ -82,6 +82,29 @@ function initializeDatabase() {
 					console.error("Error creating note table:", err);
 				} else {
 					console.log("Table 'note' ensured to exist.");
+
+					// Insert a welcome note
+					const welcomeNote = {
+						category: "Getting Started",
+						title: "Welcome",
+						content:
+							"Hello Mindscriber, I'm thrilled to have you on board. This application is designed to help you manage your notes efficiently and effectively. Create new notes, and track your thoughts with ease. If you have any questions, feel free to reach out to THE BLACKGEEK. Happy note-taking!",
+						date: "May 29, 2024 18:00",
+					};
+
+					const sql = `
+                        INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) 
+                        VALUES (?, ?, ?, ?)
+                    `;
+					const params = [welcomeNote.category, welcomeNote.title, welcomeNote.content, welcomeNote.date];
+
+					db.run(sql, params, function (err) {
+						if (err) {
+							console.error("Error inserting welcome note:", err);
+						} else {
+							console.log("Welcome note added with ID:", this.lastID);
+						}
+					});
 				}
 			}
 		);
