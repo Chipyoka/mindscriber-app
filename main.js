@@ -50,7 +50,7 @@ function createMainWindow() {
 	setTimeout(() => {
 		loaderWindow.close();
 		mainWindow.show();
-	}, 15000);
+	}, 8000);
 }
 
 app.on("ready", () => {
