@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
 	packagerConfig: {
 		asar: true,
-		icon: path.join(__dirname, "src", "assets", "public", "favicon2"), // actual path to icon
+		icon: path.join(__dirname, "src/public/favicon2.ico"), // actual path to icon
 		extraFiles: [
 			"./mindscriber.sqlite", // actual path to database
 		],
