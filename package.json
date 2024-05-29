@@ -4,20 +4,19 @@
   "main": "main.js",
   "icon": "src/public/favicon2.ico",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron-forge start"
   },
   "build": {
+    
     "appId": "bgk.mindscriber",
+    "asar": true,
     "win": {
       "target": "nsis",
-      "icon": "src/public/favicon2.ico",
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "createDesktopShortcut": true,
-        "createStartMenuShortcut": true
-      }
+      "icon": "src/public/favicon2.ico"
     },
     "files": [
       "node_modules/**/*",
@@ -46,7 +45,16 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
     "electron": "^30.0.8",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9"
   }
 }

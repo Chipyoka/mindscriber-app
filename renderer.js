@@ -1,14 +1,14 @@
 // Send a message to the main process
-// window.electron.ipcRenderer.send("message-from-renderer", "Hello from THE BLACKGEEK");
+window.electron.ipcRenderer.send("message-from-renderer", "Hello from THE BLACKGEEK");
 
-// // Listen for a reply from the main process
-// window.electron.ipcRenderer.on("reply-from-main", (message) => {
-// 	console.log(message); // Should print "Hello from the main process"
-// 	const button = document.getElementById("send-message");
-// 	button.addEventListener("click", () => {
-// 		electron.ipcRenderer.send("message-from-renderer", "Message after button click");
-// 	});
-// });
+// Listen for a reply from the main process
+window.electron.ipcRenderer.on("reply-from-main", (message) => {
+	console.log(message); // Should print "Hello from the main process"
+	const button = document.getElementById("send-message");
+	button.addEventListener("click", () => {
+		electron.ipcRenderer.send("message-from-renderer", "Message after button click");
+	});
+});
 
 document.addEventListener("DOMContentLoaded", () => {
 	let currentNoteId = null; // Variable to store the current note ID
