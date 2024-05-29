@@ -42,231 +42,11 @@ ipcMain.on("message-from-renderer", (event, arg) => {
 	event.reply("reply-from-main", "Hello from the main process");
 });
 
-//Database connection establishment
-// const db = new sqlite3.Database(path.join(__dirname, "mindscriber.sqlite"));
-
-// let db;
-
-// function openDatabase() {
-// 	if (!db) {
-// 		const dbPath = path.join(app.getAppPath(), "mindscriber.sqlite");
-// 		db = new sqlite3.Database(path.join(__dirname, "mindscriber.sqlite"), (err) => {
-// 			if (err) {
-// 				console.error("Failed to open database:", err);
-// 			} else {
-// 				console.log("Database opened successfully", dbPath);
-// 			}
-// 		});
-// 	}
-// }
-
-// // Open the database initially
-// openDatabase();
-
-// // Function to ensure the database is open before executing a query
-// function withDatabase(fn) {
-// 	return new Promise((resolve, reject) => {
-// 		openDatabase();
-// 		fn(resolve, reject);
-// 	});
-// }
-
-// // IPC handlers to fetch rows from the SQLite3 database
-// ipcMain.handle("fetch-rows", async () => {
-// 	return new Promise((resolve, reject) => {
-// 		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, rows) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(rows);
-// 			}
-// 		});
-// 	});
-// });
-
-// //Handler for counting notes available.
-// ipcMain.handle("count-notes", async () => {
-// 	return new Promise((resolve, reject) => {
-// 		db.all("SELECT COUNT(*) FROM note", [], (err, rows) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(rows);
-// 			}
-// 		});
-// 	});
-// });
-
-// // Handler for fetching note by ID
-// ipcMain.handle("fetch-row-by-id", async (event, id) => {
-// 	return new Promise((resolve, reject) => {
-// 		db.all("SELECT * FROM note WHERE NOTE_ID = ?", [id], (err, row) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(row);
-// 			}
-// 		});
-// 	});
-// });
-
-// // Handler for inserting a new note
-// ipcMain.handle("add-note", async (event, note) => {
-// 	return new Promise((resolve, reject) => {
-// 		const {note_category, note_title, note_content, note_date} = note;
-
-// 		const sql = "INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) VALUES (?, ?, ?, ?)";
-// 		const params = [note_category, note_title, note_content, note_date];
-
-// 		db.run(sql, params, function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve({id: this.lastID}); // Return the ID of the newly inserted note
-// 			}
-// 		});
-// 	});
-// });
-
-// // Handler for deleting a note
-// ipcMain.handle("delete-note", async (event, noteId) => {
-// 	return new Promise((resolve, reject) => {
-// 		const sql = "DELETE FROM note WHERE NOTE_ID = ?";
-// 		db.run(sql, [noteId], function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve({success: true});
-// 			}
-// 		});
-// 	});
-// });
-
-// // Handler for updating the note
-// ipcMain.handle("update-note", async (event, note) => {
-// 	return new Promise((resolve, reject) => {
-// 		const {note_id, note_category, note_title, note_content} = note;
-// 		const sql = "UPDATE note SET NOTE_CATEGORY = ?, NOTE_TITLE = ?, NOTE_CONTENT = ? WHERE NOTE_ID = ?";
-// 		const params = [note_category, note_title, note_content, note_id];
-
-// 		db.run(sql, params, function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve();
-// 			}
-// 		});
-// 	});
-// });
-
-// let db;
-
-// function openDatabase() {
-// 	if (!db) {
-// 		const dbPath = app.isPackaged ? path.join(process.resourcesPath, "mindscriber.sqlite") : path.join(__dirname, "mindscriber.sqlite");
-
-// 		db = new sqlite3.Database(dbPath, (err) => {
-// 			if (err) {
-// 				console.error("Failed to open database:", err);
-// 			} else {
-// 				console.log("Database opened successfully at", dbPath);
-// 			}
-// 		});
-// 	}
-// }
-
-// openDatabase();
-
-// function withDatabase(fn) {
-// 	return new Promise((resolve, reject) => {
-// 		openDatabase();
-// 		fn(resolve, reject);
-// 	});
-// }
-
-// ipcMain.handle("fetch-rows", async () => {
-// 	return withDatabase((resolve, reject) => {
-// 		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, rows) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(rows);
-// 			}
-// 		});
-// 	});
-// });
-
-// ipcMain.handle("count-notes", async () => {
-// 	return withDatabase((resolve, reject) => {
-// 		db.all("SELECT COUNT(*) FROM note", [], (err, rows) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(rows);
-// 			}
-// 		});
-// 	});
-// });
-
-// ipcMain.handle("fetch-row-by-id", async (event, id) => {
-// 	return withDatabase((resolve, reject) => {
-// 		db.all("SELECT * FROM note WHERE NOTE_ID = ?", [id], (err, row) => {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve(row);
-// 			}
-// 		});
-// 	});
-// });
-
-// ipcMain.handle("add-note", async (event, note) => {
-// 	return withDatabase((resolve, reject) => {
-// 		const {note_category, note_title, note_content, note_date} = note;
-
-// 		const sql = "INSERT INTO note (NOTE_CATEGORY, NOTE_TITLE, NOTE_CONTENT, NOTE_DATE) VALUES (?, ?, ?, ?)";
-// 		const params = [note_category, note_title, note_content, note_date];
-
-// 		db.run(sql, params, function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve({id: this.lastID});
-// 			}
-// 		});
-// 	});
-// });
-
-// ipcMain.handle("delete-note", async (event, noteId) => {
-// 	return withDatabase((resolve, reject) => {
-// 		const sql = "DELETE FROM note WHERE NOTE_ID = ?";
-// 		db.run(sql, [noteId], function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve({success: true});
-// 			}
-// 		});
-// 	});
-// });
-
-// ipcMain.handle("update-note", async (event, note) => {
-// 	return withDatabase((resolve, reject) => {
-// 		const {note_id, note_category, note_title, note_content} = note;
-// 		const sql = "UPDATE note SET NOTE_CATEGORY = ?, NOTE_TITLE = ?, NOTE_CONTENT = ? WHERE NOTE_ID = ?";
-// 		const params = [note_category, note_title, note_content, note_id];
-
-// 		db.run(sql, params, function (err) {
-// 			if (err) {
-// 				reject(err);
-// 			} else {
-// 				resolve();
-// 			}
-// 		});
-// 	});
-// });
+// Database initialization carried below
 
 let db;
+
+// Open database connection
 
 function openDatabase() {
 	if (!db) {
@@ -282,6 +62,8 @@ function openDatabase() {
 		});
 	}
 }
+
+// initialize and check if table exists or else create one
 
 function initializeDatabase() {
 	db.serialize(() => {
@@ -306,6 +88,8 @@ function initializeDatabase() {
 	});
 }
 
+// new promise to perform db operations whilst open
+
 function withDatabase(fn) {
 	return new Promise((resolve, reject) => {
 		openDatabase();
@@ -313,47 +97,52 @@ function withDatabase(fn) {
 	});
 }
 
+// function to open the database connections
 openDatabase();
 
-ipcMain.handle("fetch-rows", async () => {
+// handler for feching notes (notes)
+ipcMain.handle("fetch-note", async () => {
 	return withDatabase((resolve, reject) => {
-		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, rows) => {
+		db.all("SELECT * FROM note ORDER BY NOTE_ID DESC", [], (err, notes) => {
 			if (err) {
-				console.error("Error fetching rows:", err);
+				console.error("Error fetching notes:", err);
 				reject(err);
 			} else {
-				resolve(rows);
+				resolve(notes);
 			}
 		});
 	});
 });
 
+// handle for counting notes (notes)
 ipcMain.handle("count-notes", async () => {
 	return withDatabase((resolve, reject) => {
-		db.all("SELECT COUNT(*) FROM note", [], (err, rows) => {
+		db.all("SELECT COUNT(*) FROM note", [], (err, notes) => {
 			if (err) {
 				console.error("Error counting notes:", err);
 				reject(err);
 			} else {
-				resolve(rows);
+				resolve(notes);
 			}
 		});
 	});
 });
 
-ipcMain.handle("fetch-row-by-id", async (event, id) => {
+// handle for fetching note by id
+ipcMain.handle("fetch-note-by-id", async (event, id) => {
 	return withDatabase((resolve, reject) => {
-		db.all("SELECT * FROM note WHERE NOTE_ID = ?", [id], (err, row) => {
+		db.all("SELECT * FROM note WHERE NOTE_ID = ?", [id], (err, note) => {
 			if (err) {
-				console.error("Error fetching row by ID:", err);
+				console.error("Error fetching note by ID:", err);
 				reject(err);
 			} else {
-				resolve(row);
+				resolve(note);
 			}
 		});
 	});
 });
 
+// handle for adding a new note
 ipcMain.handle("add-note", async (event, note) => {
 	return withDatabase((resolve, reject) => {
 		const {note_category, note_title, note_content, note_date} = note;
@@ -372,6 +161,7 @@ ipcMain.handle("add-note", async (event, note) => {
 	});
 });
 
+// handle for deleting a note
 ipcMain.handle("delete-note", async (event, noteId) => {
 	return withDatabase((resolve, reject) => {
 		const sql = "DELETE FROM note WHERE NOTE_ID = ?";
@@ -386,6 +176,7 @@ ipcMain.handle("delete-note", async (event, noteId) => {
 	});
 });
 
+// handle for updating a note
 ipcMain.handle("update-note", async (event, note) => {
 	return withDatabase((resolve, reject) => {
 		const {note_id, note_category, note_title, note_content} = note;
@@ -402,3 +193,6 @@ ipcMain.handle("update-note", async (event, note) => {
 		});
 	});
 });
+
+// Happy Coding Dev :)
+// Happy Note Taking User :)

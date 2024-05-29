@@ -14,16 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	let currentNoteId = null; // Variable to store the current note ID
 	const errorMessage = document.getElementById("showError");
 
-	// Function to fetch rows from the database
-	async function fetchRows() {
+	// Function to fetch notes from the database
+	async function fetchnotes() {
 		try {
-			const rows = await window.electron.ipcRenderer.invoke("fetch-rows");
-			// console.log(rows);
+			const notes = await window.electron.ipcRenderer.invoke("fetch-note");
+			// console.log(notes);
 
-			// Pass the rows to the displaying functions
-			createButtons(rows);
+			// Pass the notes to the displaying functions
+			createButtons(notes);
 		} catch (error) {
-			console.error("Error fetching rows:", error);
+			console.error("Error fetching notes:", error);
 		}
 	}
 	const closeViewModal = document.getElementById("closeView");
@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	closeViewModal.onclick = function () {
 		viewModal.style.display = "none";
 	};
-	// Function to create buttons based on fetched rows
-	function createButtons(rows) {
+	// Function to create buttons based on fetched notes
+	function createButtons(notes) {
 		const container = document.getElementById("entryDisplay");
 
 		// Clear existing elements
@@ -40,10 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		/*Below  i have implemented a logic to check if there a re no notes to display the 
 		a message saying list empty should appear. This is done through checking the lenght of 
-		the rows array. Because if it zero means there are no notes in the database
+		the notes array. Because if it zero means there are no notes in the database
 		*/
 
-		if (rows.length < 1) {
+		if (notes.length < 1) {
 			// console.log("Table Empty");
 
 			// create element that displays the empty list element
@@ -66,36 +66,36 @@ document.addEventListener("DOMContentLoaded", () => {
 			container.appendChild(emptyMessage);
 		} else {
 			// console.log("Table Has values");
-			// Create the button that displays the rows
+			// Create the button that displays the notes
 
-			rows.forEach((row) => {
+			notes.forEach((note) => {
 				// Create the main button element
 				const button = document.createElement("button");
 				button.type = "button";
 				button.title = " Click to View";
-				button.classList.add("btn", "entry", "row");
+				button.classList.add("btn", "entry", "note");
 
 				// Create the inner elements
 				const noteCategory = document.createElement("div");
 				noteCategory.classList.add("col-3", "left", "capitalize", "cat");
-				noteCategory.textContent = row.NOTE_CATEGORY;
+				noteCategory.textContent = note.NOTE_CATEGORY;
 
 				const noteTitle = document.createElement("div");
 				noteTitle.classList.add("col-4", "left", "capitalize", "cat");
-				noteTitle.textContent = row.NOTE_TITLE;
+				noteTitle.textContent = note.NOTE_TITLE;
 
 				const noteDate = document.createElement("div");
 				noteDate.classList.add("col-3", "right", "cat");
-				noteDate.textContent = row.NOTE_DATE;
+				noteDate.textContent = note.NOTE_DATE;
 
 				const noteContent = document.createElement("div");
 				noteContent.classList.add("cat");
-				noteContent.textContent = row.NOTE_CONTENT;
+				noteContent.textContent = note.NOTE_CONTENT;
 
 				//  event for button
 				button.addEventListener("click", () => {
-					currentNoteId = row.NOTE_ID; // Store the note ID of clicked
-					showViewNoteModal(row);
+					currentNoteId = note.NOTE_ID; // Store the note ID of clicked
+					showViewNoteModal(note);
 				});
 
 				// Append inner elements to the button
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			// After updating the note, close the modal
 			viewModal.style.display = "none";
-			fetchRows();
+			fetchnotes();
 			countNotes();
 		} catch (error) {
 			console.error("Error updating note:", error);
@@ -217,8 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
 				// Close the modal after deletion
 				viewModal.style.display = "none";
 
-				// Fetch rows and count again to update the list
-				fetchRows();
+				// Fetch notes and count again to update the list
+				fetchnotes();
 				countNotes();
 			} catch (error) {
 				console.error("Error deleting note:", error);
@@ -226,28 +226,28 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
-	// Fetch rows initially when the page loads
-	fetchRows();
+	// Fetch notes initially when the page loads
+	fetchnotes();
 
 	/*
 	Below function fetches the number of notes available in the table. There is 
 	a handler defined in the main process, However i used the work-around of just getting the
-	array lenght of the objects fetched by the fetch rows handle.
+	array lenght of the objects fetched by the fetch notes handle.
 	*/
 
 	async function countNotes() {
 		try {
-			const rows = await window.electron.ipcRenderer.invoke("fetch-rows");
-			// console.log("count: " + rows.length);
+			const notes = await window.electron.ipcRenderer.invoke("fetch-note");
+			// console.log("count: " + notes.length);
 
-			const count = rows.length;
+			const count = notes.length;
 			const newCount = String(count).padStart(2, "0");
 
 			// Display number of notes
 			const notesCount = document.getElementById("displayCount");
 			notesCount.textContent = `Notes: ${newCount}`;
 		} catch (error) {
-			console.error("Error fetching rows:", error);
+			console.error("Error fetching notes:", error);
 		}
 	}
 
@@ -397,8 +397,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			modal.style.display = "none";
 			addNoteForm.reset();
 
-			// fetch rows and count again to update the list
-			fetchRows();
+			// fetch notes and count again to update the list
+			fetchnotes();
 			countNotes();
 		} catch (error) {
 			console.error("Error adding note:", error);
