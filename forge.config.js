@@ -5,10 +5,9 @@ const path = require("path");
 module.exports = {
 	packagerConfig: {
 		asar: true,
-		icon: path.join(__dirname, "src", "assets", "public", "favicon2"),
+		icon: path.join(__dirname, "src", "assets", "public", "favicon2"), // actual path to icon
 		extraFiles: [
-			// Add this line
-			"./mindscriber.sqlite", // Replace with the actual path to your database
+			"./mindscriber.sqlite", // actual path to database
 		],
 	},
 	rebuildConfig: {},
@@ -48,3 +47,16 @@ module.exports = {
 		}),
 	],
 };
+
+/*
+
+::Developed from scratch with the so purpose of;
+1. Learning Desktop App Development with Electron JS
+2. Sharpen my JavaScript Coding Skills
+3. Writing a Efficient and Clean Code.
+
+Deloveped BY THE BLACKGEEK :)
+
+Happy Note Taking !
+
+*/

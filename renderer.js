@@ -52,11 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			const empty = document.createElement("p");
 			empty.classList.add("empty");
-			empty.textContent = "List Empty";
+			empty.textContent = " Oops !";
 
 			const emptySub = document.createElement("p");
 			emptySub.classList.add("empty-sub");
-			emptySub.textContent = "Start by adding a new note now!";
+			emptySub.textContent = " Nothing to show, add a new note now!";
 
 			// Append the button to the div
 			emptyMessage.appendChild(empty);
@@ -151,9 +151,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.getElementById("edit-note-form").style.display = "block";
 
 		// Populate the edit form with current note details
-		document.getElementById("edit-note-category").value = document.getElementById("showCategory").textContent;
-		document.getElementById("edit-note-title").value = document.getElementById("showTitle").textContent;
-		document.getElementById("edit-note-content").value = document.getElementById("showContent").textContent;
+		document.getElementById("edit-note-category").value =
+			document.getElementById("showCategory").textContent;
+		document.getElementById("edit-note-title").value =
+			document.getElementById("showTitle").textContent;
+		document.getElementById("edit-note-content").value =
+			document.getElementById("showContent").textContent;
 	});
 
 	// Save edit button handler
@@ -287,7 +290,20 @@ document.addEventListener("DOMContentLoaded", () => {
 	// function to format date
 	function formatDate(date) {
 		// Array of months in short
-		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		const months = [
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec",
+		];
 
 		// get date
 		const dayOfMonth = String(date.getDate()).padStart(2, "0");
@@ -429,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /*
 
-::Developed from scratch with the soul purpose of;
+::Developed from scratch with the so purpose of;
 1. Learning Desktop App Development with Electron JS
 2. Sharpen my JavaScript Coding Skills
 3. Writing a Efficient and Clean Code.
