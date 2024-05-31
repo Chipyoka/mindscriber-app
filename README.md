@@ -29,8 +29,8 @@ To run Mindscriber locally, follow these steps:
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/Mindscriber.git
-    cd Mindscriber
+    git clone https://github.com/Chipyoka/mindscriber-app
+    cd mindscriber
     ```
 
 2. **Install dependencies**:
@@ -157,7 +157,7 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the MIT License. 
 
 ---
 
