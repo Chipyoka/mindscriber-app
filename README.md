@@ -44,6 +44,9 @@ To run Mindscriber locally, follow these steps:
     npm start
     ```
 
+-   **Or**:
+    You can download the setup file [Here](https://github.com/Chipyoka/mindscriber-app/releases/download/v1.0.0/Mindscriber-1.0.0.Setup.exe) for windows 10 OS x64.
+
 ## Usage
 
 After installation, launch the application:
@@ -157,7 +160,7 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 ## License
 
-This project is licensed under the MIT License. 
+This project is licensed under the MIT License.
 
 ---
 
