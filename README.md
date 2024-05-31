@@ -17,7 +17,7 @@ Welcome to **Mindscriber**, a sleek and efficient note-taking application built 
 ## Features
 
 -   **User-Friendly Interface**: Built with Bootstrap for a responsive and clean UI.
--   **Rich Text Editing**: Create and format your notes with ease.
+-   **Text Editing**: Create and format your notes with ease.
 -   **Persistent Storage**: Save notes locally using SQLite3.
 -   **Cross-Platform Support**: Primarily for Windows, but can be extended to other platforms.
 -   **Offline Access**: Access your notes without an internet connection.
@@ -69,11 +69,11 @@ mindscriber/
 │   └── index.html         # Main HTML file
 │   └── loader.html        # HTML file for Loader
 │   └── index.js           # Script File
-│   └── .gitignore         # Custom CSS styles
+│   └── .gitignore         # Git ignore file
 ├── main.js                # Main process
 ├── renderer.js            # Renderer process
 ├── mindscriber.sqlite     # SQLite3 database file
-├── preload.js             # SQLite3 database file
+├── preload.js             # Script to expose main process handles
 ├── forge.config.js        # Electron-forge config file
 ├── package.json           # Metadata and configurations
 ├── README.md              # README file
