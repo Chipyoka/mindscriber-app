@@ -166,4 +166,6 @@ This project is licensed under the MIT License.
 
 Thank you for using Mindscriber! We hope this application helps you stay organized and productive. If you have any questions or feedback, please feel free to reach out.
 
+Don't forget to leave a star...
+
 ---
